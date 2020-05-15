@@ -1,8 +1,14 @@
 import asyncio
 
 
-async def handle_echo(reader, writer):
-    pass
+async def handle_echo(reader: asyncio.StreamReader,
+                      writer: asyncio.StreamWriter):
+    data = await reader.read(1024)
+    message = data.decode()
+    addr = writer.get_extra_info('peername')
+    chars_to_strip = '\n'
+    print(f"received {message.rstrip(chars_to_strip)} from {addr}")
+    writer.close()
 
 
 loop = asyncio.get_event_loop()
