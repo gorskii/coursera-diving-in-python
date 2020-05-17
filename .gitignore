@@ -1,0 +1,7 @@
+tmp/
+venv/
+venv38/
+.idea/
+*.log
+*.txt
+*.csv
