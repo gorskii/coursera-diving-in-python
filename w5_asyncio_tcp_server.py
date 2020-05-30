@@ -13,7 +13,7 @@ async def handle_echo(reader: asyncio.StreamReader,
 
 loop = asyncio.get_event_loop()
 coro = asyncio.start_server(handle_echo, "127.0.0.1", 10001, loop=loop)
-server = loop.run_until_complete(coro)  # type: asyncio.AbstractServer
+server: asyncio.AbstractServer = loop.run_until_complete(coro)
 try:
     loop.run_forever()
 except KeyboardInterrupt:
