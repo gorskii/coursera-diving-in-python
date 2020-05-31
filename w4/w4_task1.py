@@ -100,15 +100,15 @@ class File:
 
 
 # Класс инициализируется полным путем.
-obj = File('tmp/file.txt')
+obj = File('../tmp/file.txt')
 
 # Класс должен поддерживать метод write.
 if obj is not None:
     obj.write('line\n')
 
 # Объекты типа File должны поддерживать сложение.
-first = File('tmp/first')
-second = File('tmp/second')
+first = File('../tmp/first')
+second = File('../tmp/second')
 
 new_obj = first + second
 # В этом случае создается новый файл и файловый объект, в котором содержимое
@@ -128,6 +128,6 @@ for line in new_obj:
 print(obj)
 # >> '/tmp/file.txt'
 
-with File('tmp/first') as f:
+with File('../tmp/first') as f:
     for line in f:
         print(line, end='')
