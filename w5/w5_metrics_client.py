@@ -14,5 +14,5 @@ class Client:
     def get(self, metric: str) -> Dict[str: List[Tuple[int, float]]]:
         pass
 
-    def put(self, metric: str, value: float, timestamp: int) -> None:
+    def put(self, metric: str, value: float, timestamp: int = None) -> None:
         pass
