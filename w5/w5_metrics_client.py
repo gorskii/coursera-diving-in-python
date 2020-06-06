@@ -11,7 +11,7 @@ class Client:
         self._port = port
         self._timeout = None or timeout
 
-    def get(self, metric: str) -> Dict[str: List[Tuple[int, float]]]:
+    def get(self, metric: str) -> Dict[str, List[Tuple[int, float]]]:
         pass
 
     def put(self, metric: str, value: float, timestamp: int = None) -> None:
