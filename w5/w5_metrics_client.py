@@ -16,3 +16,7 @@ class Client:
 
     def put(self, metric: str, value: float, timestamp: int = None) -> None:
         pass
+
+
+class ClientError(BaseException):
+    pass
