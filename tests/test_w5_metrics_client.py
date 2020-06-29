@@ -30,10 +30,12 @@ class TestClient(TestCase):
         self.assertEqual(expected, self.client.get("*"))
 
     def test_get_one_metric(self):
+        import time
         expected = {
             'palm.cpu': [
                 (1150864247, 0.5),
-                (1150864248, 0.5)
+                (1150864248, 0.5),
+                (int(time.time()), 0.5)
             ]
         }
         self.assertEqual(expected, self.client.get("palm.cpu"))
