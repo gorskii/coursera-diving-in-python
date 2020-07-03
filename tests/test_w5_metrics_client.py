@@ -14,10 +14,16 @@ class TestClient(TestCase):
         self.assertIsInstance(self.client._socket, socket)
 
     def test_get_all_metrics(self):
+        self.client.put("palm.cpu", 0.5, 1150864247)
+        self.client.put("palm.cpu", 0.5, 1150864248)
+        self.client.put("palm.cpu", 0.7, 1150864248)
+        self.client.put("eardrum.cpu", 3.0, 1150864250)
+        self.client.put("eardrum.cpu", 4.0, 1150864251)
+        self.client.put("eardrum.memory", 4200000.0, 1503320872)
         expected = {
             'palm.cpu': [
                 (1150864247, 0.5),
-                (1150864248, 0.5)
+                (1150864248, 0.7)
             ],
             'eardrum.cpu': [
                 (1150864250, 3.0),
@@ -31,6 +37,9 @@ class TestClient(TestCase):
 
     def test_get_one_metric(self):
         import time
+        self.client.put("palm.cpu", 0.5, 1150864247)
+        self.client.put("palm.cpu", 0.5, 1150864248)
+        self.client.put("palm.cpu", 0.5)
         expected = {
             'palm.cpu': [
                 (1150864247, 0.5),
