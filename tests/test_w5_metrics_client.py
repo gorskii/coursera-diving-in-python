@@ -13,6 +13,15 @@ class TestClient(TestCase):
         from socket import socket
         self.assertIsInstance(self.client._socket, socket)
 
+    def test_create_multiple_connections(self):
+        clients_list = [
+            Client(self.host, self.port, timeout=5)
+            for _ in range(500)
+        ]
+        results = [client.get("*") for client in clients_list]
+        self.assertEqual(500, len(clients_list))
+        self.assertEqual(500, len(results))
+
     def test_get_all_metrics(self):
         self.client.put("palm.cpu", 0.5, 1150864247)
         self.client.put("palm.cpu", 0.5, 1150864248)
