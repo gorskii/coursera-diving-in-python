@@ -1,4 +1,5 @@
 import asyncio
+from collections import defaultdict
 from typing import Dict, Tuple, List
 
 SUPPORTED_COMMANDS = ("get", "put")
@@ -7,7 +8,7 @@ STATUS_OK = "ok\n"
 STATUS_ERROR = "error\n"
 EOL = "\n\n"
 
-metrics_dict: Dict[str, List[Tuple[int, float]]] = {}
+metrics_dict: Dict[str, List[Tuple[int, float]]] = defaultdict(list)
 
 
 class ClientServerProtocol(asyncio.Protocol):
@@ -49,8 +50,6 @@ def get_metric(metric_key: str) -> str:
 
 
 def put_metric(metric_key: str, metric_value: float, timestamp: int) -> str:
-    if metric_key not in metrics_dict.keys():
-        metrics_dict[metric_key] = []
     for i, tuple in enumerate(metrics_dict[metric_key]):
         if tuple[0] == timestamp:
             metrics_dict[metric_key].pop(i)
