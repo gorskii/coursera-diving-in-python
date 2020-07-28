@@ -2,6 +2,9 @@ import asyncio
 from collections import defaultdict
 from typing import Dict, Tuple, List
 
+HOST = "127.0.0.1"
+PORT = 8888
+
 SUPPORTED_COMMANDS = ("get", "put")
 
 STATUS_OK = "ok\n"
@@ -12,6 +15,7 @@ metrics_dict: Dict[str, List[Tuple[int, float]]] = defaultdict(list)
 
 
 class ClientServerProtocol(asyncio.Protocol):
+
     def connection_made(self, transport: asyncio.Transport) -> None:
         self.transport = transport
         print(self.transport.get_extra_info("peername"))
@@ -30,7 +34,9 @@ def process_data(data: str) -> str:
                     return get_metric(metric)
             if command == SUPPORTED_COMMANDS[1]:
                 metric_key, metric_value, timestamp = metric.split()
-                return put_metric(metric_key, float(metric_value), int(timestamp))
+                return put_metric(
+                    metric_key, float(metric_value), int(timestamp)
+                )
         except ValueError:
             pass
     return f"{STATUS_ERROR}wrong command{EOL}"
@@ -44,14 +50,15 @@ def get_metric(metric_key: str) -> str:
                 result += f"{key} {value_tuple[1]} {value_tuple[0]}\n"
     else:
         if metric_key in metrics_dict.keys():
-            for value_tuple in sorted(metrics_dict[metric_key], key=lambda x: x[0]):
+            for value_tuple in sorted(metrics_dict[metric_key],
+                                      key=lambda x: x[0]):
                 result += f"{metric_key} {value_tuple[1]} {value_tuple[0]}\n"
     return f"{STATUS_OK}{result}\n"
 
 
 def put_metric(metric_key: str, metric_value: float, timestamp: int) -> str:
-    for i, tuple in enumerate(metrics_dict[metric_key]):
-        if tuple[0] == timestamp:
+    for i, value_tuple in enumerate(metrics_dict[metric_key]):
+        if value_tuple[0] == timestamp:
             metrics_dict[metric_key].pop(i)
             break
     metrics_dict[metric_key].append((timestamp, metric_value))
@@ -75,6 +82,4 @@ def run_server(host: str, port: int) -> None:
 
 
 if __name__ == "__main__":
-    host = "127.0.0.1"
-    port = 8888
-    run_server(host, port)
+    run_server(HOST, PORT)
