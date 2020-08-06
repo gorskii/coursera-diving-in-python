@@ -1,10 +1,23 @@
 """Simple forecast module which uses OpenWeatherMap API
 """
-
-from typing import List, Dict
 import json
+import os
+from typing import List, Dict
+
 import requests
 from dateutil.parser import parse
+
+API_KEY = os.getenv('OPEN_WEATHER_MAP_API_KEY')
+if not API_KEY:
+    with open('example-config.ini', mode='r') as config_file:
+        config = config_file.readlines()
+        for line in config:
+            if not line.startswith('#') and line.startswith('API_KEY'):
+                API_KEY = line.split(sep='=')[1].strip()
+    if not API_KEY:
+        print('Please set an API key in config.ini '
+              'or set OPEN_WEATHER_MAP_API_KEY environment variable')
+        exit(1)
 
 
 class WeatherForecast:
@@ -17,9 +30,11 @@ class WeatherForecast:
             print(f"Getting '{city}' forecast from cache")
             return self._city_cache[city]
         url = f"https://api.openweathermap.org/data/2.5/forecast?" \
-              f"q={city}&units=metric&appid=967e0644610deec378355a38548a57ee"
+              f"q={city}&units=metric&appid={API_KEY}"
         print("Sending HTTP request")
-        data = requests.get(url).json()
+        response = requests.get(url)
+        response.raise_for_status()
+        data = response.json()
         forecast_data = data["list"]
         forecast = [
             {
